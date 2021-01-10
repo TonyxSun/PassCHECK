@@ -2,6 +2,16 @@ import requests
 import hashlib
 import sys
 from requests.api import request
+import smtplib
+from email.message import EmailMessage
+from string import Template
+from pathlib import Path
+
+email = EmailMessage()
+email['from'] = 'Tony Sun'
+email['to'] = 'sunwuyue@live.com'
+email['subject'] = 'Monthly Passcheck'
+# Use the task scheduler in Windows to automate running this script monthly!!
 
 
 def request_api_data(query_data):
@@ -32,14 +42,23 @@ def pwned_api_check(password):
 
 
 def main(args):
+    s = ''
     for password in args:
         count = pwned_api_check(password)
         if count:
             print(
                 f'{password} was found {count} times. You should change your password.')
+            s += f'{password} was found {count} times. You should change your password.\n'
         else:
             print(f"{password} was not found. You are good to go.")
+            s += f"{password} was not found. You are good to go.\n"
+    email.set_content(s, 'html')
+    with smtplib.SMTP(host='smtp.gmail.com', port=587) as smtp:
+        smtp.ehlo()
+        smtp.starttls()
+        smtp.login('tedxnguyenx@gmail.com', 'Aa020829')
+        smtp.send_message(email)
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))
+    main(sys.argv[1:])
