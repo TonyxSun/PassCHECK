@@ -48,7 +48,7 @@ def main(args):
         if count:
             print(
                 f'{password} was found {count} times. You should change your password.')
-            s += f'{password} was found {count} times. You should change your password.\n\n'
+            s += f'{password} was found {count} times. You should change your password.\n'
         else:
             print(f"{password} was not found. You are good to go.")
             s += f"{password} was not found. You are good to go.\n"
